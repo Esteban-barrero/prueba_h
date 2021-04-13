@@ -1,0 +1,503 @@
+﻿@page
+@model pedidosModel
+@{
+}
+
+@section scripts
+    {
+    <script src="~/js/pedidos/pedidos.js?@DateTime.Now.ToBinary()"></script>
+    <script src="~/js/productos/productos.js?@DateTime.Now.ToBinary()"></script>
+}
+
+@*<script src="~/js/pedidos/pedidos.js"></script>
+    <script src="~/js/productos/productos.js"></script>*@
+@**********************************************************************************************************************************@
+@*pedido maestro principal*@
+<div class="container" style="width:100%; margin-right:0px;margin-left:0px;max-width:100%;">
+    <br />
+    <div class="card" style="width:100%">
+        <div class="card-header">
+            Pedidos maestro
+        </div>
+        <div class="card-body">
+            <table border="0" style="width:100%">
+                <tr>
+                    <td>
+                        <br />
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table style="width:100%" border="0">
+                                    <tr>
+                                        <td width="30%">
+                                            <table>
+                                                <tr>
+                                                    <td style="vertical-align:middle">
+                                                        Lista pedidos
+                                                    </td>
+                                                    <td>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </td>
+                                                    <td style="display:block">
+                                                        <div>
+                                                            <button type="button"
+                                                                    class="btn btn-secondary"
+                                                                    id="btnCrear"
+                                                                    name="btnCrear"
+                                                                    data-toggle="modal"
+                                                                    data-target="#flipFlop"
+                                                                    style="display:block">
+                                                                Crear
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td width="70%">
+                                            <table border="0" style="width:100%">
+                                                <tr>
+                                                    <td width="90%">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                                            <input id="txtFiltro" type="text" class="form-control" name="txtFiltro" placeholder="Filtro">
+                                                        </div>
+                                                    </td>
+                                                    <td width="10%" align="center">
+                                                        <button type="button" class="btn btn-secondary" id="btnFiltrar" name="btnFiltrar" onclick="Pedidos.getPedidosM_filtro();">Filtrar</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-hover" id="tblPedidosM" name="tblPedidosM">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"># Pedido</th>
+                                            <th scope="col">cliente</th>
+                                            <th scope="col">categoria</th>
+                                            <th scope="col">Valor</th>
+                                            <th scope="col">estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBodyPedidosM"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@**********************************************************************************************************************************@
+@*pedido maestro agrear/modificar*@
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="modalFrmMaterPedido" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="max-width:100%; width:95%;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(0,0,0,.03);">
+                <table style="width:100%;" border="0">
+                    <tr>
+                        <td style="width:95%" align="center">
+                            <h5 class="modal-title">Pedido Detalle</h5>
+                        </td>
+                        <td style="width:5%">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td style="display:block">
+                                    <button type="button" class="btn btn-secondary" id="btnGuardar" name="btnGuardar" style="display:block"> Guardar  </button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" id="btnCancelar" name="btnCancelar" onclick="$('#modalFrmMaterPedido').modal('hide')">Cancelar</button>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="modal-body">
+                        <table style="width:100%" border="0">
+                            <tr>
+                                <td>
+                                    <input type="text" id="txtUidPedidoM" style="display:none;" />
+                                </td>
+                            </tr>
+                            <tr>
+
+
+                                <td width="5%" style="text-align:right;">
+                                    <label class="col-sm- control-label">Cliente</label>
+                                </td>
+                                <td width="20%">
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="cmbCliente" style="width:100%;"></select>
+                                    </div>
+                                    @*<div class="col-sm-">
+                                            <div class="invalid-feedback" id="req_cmbCliente">
+                                                Debe ingresar un cliente.
+                                            </div>
+                                        </div>*@
+                                </td>
+                                <td width="5%" style="text-align:right;">
+                                    <label class="col-sm- control-label">Categoria</label>
+                                </td>
+                                <td width="20%">
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="cmbCategoria" style="width:100%;"></select>
+                                    </div>
+                                    @*<div class="col-sm-10">
+                                            <div class="invalid-feedback" id="req_cmbCategoria">
+                                                Debe ingresar una categoria.
+                                            </div>
+                                        </div>*@
+                                </td>
+                                <td width="5%" style="text-align:right;">
+                                    <label class="col-sm- control-label">Estado</label>
+                                </td>
+                                <td width="15%">
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="cmbEstado" style="width:100%;" disabled></select>
+                                    </div>
+                                    @*<div class="col-sm-10">
+                                            <div class="invalid-feedback" id="req_cmbEstado">
+                                                Debe ingresar un estado.
+                                            </div>
+                                        </div>*@
+                                </td>
+                                <td width="5%" style="text-align:right;">
+                                    <label class="col-sm- control-label">Valor</label>
+                                </td>
+                                <td width="15%">
+                                    <div class="col-sm-10">
+                                        <input class="form-control" requerido="false" type="text" id="txtValor" maxlength="16" readonly style="width:100%;">
+                                    </div>
+                                    @*<div class="col-sm-10">
+                                            <div class="invalid-feedback" id="req_txtValor">
+                                                Debe ingresar un Valor valido.
+                                            </div>
+                                        </div>*@
+                                </td>
+                                <td width="5%">
+                                    <a href="#" class="btn btn-info btn-lg" id="btnAgregarProducto" name="btnAgregarProducto">
+                                        <span class="glyphicon glyphicon-plus"></span>Productos
+                                    </a>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-hover" id="tblProductosD" name="tblProductosD">
+                            <thead>
+                                <tr>
+                                    @*<th scope="col" style="display:none"># Pedido Detalle</th>
+                                        <th scope="col" style="display:none"># Pedido maestro</th>*@
+                                    <th scope="col"># Producto</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyProductosD"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@**********************************************************************************************************************************@
+@*Agregar producto*@
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="modalFrmAgregarProducto" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="max-width:100%; width:95%;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(0,0,0,.03);">
+                <table style="width:100%;" border="0">
+                    <tr>
+                        <td style="width:95%" align="center">
+                            <h5 class="modal-title">Agregar Producto</h5>
+                        </td>
+                        <td style="width:5%">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table>
+                            <tr><td>
+                                    <input type="text" id="txtUidPedidoMP" style="display:none;" />
+                                </td>                                
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td style="display:block">
+                                    <button type="button" class="btn btn-secondary" id="btnAgregarProducto" name="btnAgregarProducto" style="display:block" onclick="Productos.getProductosPedidoDxid();"> Agregar </button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" id="btnCancelar" name="btnCancelar" onclick="$('#modalFrmAgregarProducto').modal('hide')">Cancelar</button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td width="90%">
+                                    <table border="0" style="width:100%">
+                                        <tr>
+                                            <td width="90%">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                                    <input id="txtFiltroProduto" type="text" class="form-control" name="txtFiltroProduto" placeholder="buscar Producto">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                            <td width="10%" align="center">
+                                                <button type="button" class="btn btn-secondary" id="btnFiltrarProductos" name="btnFiltrarProductos" onclick="Productos.getProductosxCategoriaxnombre();">Filtrar</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-hover" id="tblProductos" name="tblProductos">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="display:none"># Pedido Detalle</th>
+                                    <th scope="col" style="display:none"># Pedido maestro</th>
+                                    <th scope="col"><input type="checkbox" onclick="Productos.seleccionar_todos_productos()" id="todosP" name="todosP"></th>
+                                    <th scope="col"># Producto</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Categoria</th>
+                                    <th scope="col" style="display:none">Stock</th>
+                                    <th scope="col">valor</th>
+                                    <th scope="col">Cantidad solicitada</th>
+                                    <th scope="col">sub Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyProductos"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@**********************************************************************************************************************************@
+@*Modificar/eliminar producto de pedidos detalle*@
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="modalFrmModificarEliminarProducto" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="max-width:100%; width:95%;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(0,0,0,.03);">
+                <table style="width:100%;" border="0">
+                    <tr>
+                        <td style="width:95%" align="center">
+                            <h5 class="modal-title">Modificar Producto</h5>
+                        </td>
+                        <td style="width:5%">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td style="display:block">
+                                    <button type="button" class="btn btn-secondary" id="btnModificarProducto" name="btnModificarProducto" style="display:block" onclick="Pedidos.ModificarProductoPedidod();"> Modificar  </button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td style="display:block">
+                                    <button type="button" class="btn btn-secondary" id="btnEliminarProducto" name="btnEliminarProducto" style="display:block" onclick="Pedidos.EliminarProductoPedidod();"> Eliminar  </button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" id="btnCancelar" name="btnCancelar" onclick="$('#modalFrmModificarEliminarProducto').modal('hide')">Cancelar</button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="modal-body">
+                            <table style="width:100%" border="0">
+                                <tr>
+                                    <td>
+                                        <input type="text" id="txtUidPedidoM" style="display:none;" />
+                                        <input type="text" id="txtUidPedidoD" style="display:none;" />
+                                        <input type="text" id="txtUidProducto" style="display:none;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" style="text-align:right;">
+                                        <label class="col-sm- control-label">Descripcion</label>
+                                    </td>
+                                    <td width="25%">
+                                        <div class="col-sm-10">
+                                            <input class="form-control" requerido="false" type="text" id="txtDescProducto" maxlength="16" readonly style="width:100%;">
+                                        </div>
+                                    </td>
+                                    <td width="8%" style="text-align:right;">
+                                        <label class="col-sm- control-label">varlor unitario</label>
+                                    </td>
+                                    <td width="20%">
+                                        <div class="col-sm-10">
+                                            <input class="form-control" requerido="false" type="text" id="txtValorunitario" maxlength="16" readonly style="width:100%;">
+                                        </div>
+                                    </td>
+                                    <td width="5%" style="text-align:right;">
+                                        <label class="col-sm- control-label">Cantidad</label>
+                                    </td>
+                                    <td width="10%">
+                                        <div class="col-sm-10">
+                                            <input class="form-control" requerido="false" type="number" id="txtCantidadD" maxlength="16" style="width:100%;" onchange="Productos.calcularsubvalorpro();">
+                                        </div>
+                                    </td>
+                                    <td width="5%" style="text-align:right;">
+                                        <label class="col-sm- control-label">Valor</label>
+                                    </td>
+                                    <td width="20%">
+                                        <div class="col-sm-10">
+                                            <input class="form-control" requerido="false" type="text" id="txtValorD" maxlength="16" readonly style="width:100%;" >
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        Generico.getListaClientes("cmbCliente", "");
+        Generico.getListaCategoria("cmbCategoria", "");
+        Generico.getListaEstado("cmbEstado", 1);
+        Generico.getListaProductos("", "");
+
+
+        //$("#modalFrmMaterPedido").modal("show");
+        $("#btnCrear").click(function () {
+            General.limpiarCampos();
+            $("#modalFrmMaterPedido").modal("show");
+            $("#txtUidPedidoM").val("-1");
+            $("#cmbEstado").val("1");
+            $("#tBodyProductosD").html("");
+            $("#cmbCategoria").prop('disabled', false);
+            $("#cmbCliente").prop('disabled', false);
+            $("#cmbEstado").prop('disabled', true);
+
+
+        });
+
+        $("#btnAgregarProducto").click(function () {
+            // General.limpiarCampos();
+           
+            if ($("#cmbEstado").val() != 1) {
+                Mensaje.informacion("en el estado actual del pedido no se pueden agregar productos");
+                return false;
+            }
+
+            $("#todosP").prop('checked', false);
+            if ($("#cmbCliente").val() == -1) {
+                Mensaje.informacion("Señor usuario ingrese el cliente");
+                return false;
+            }
+            if ($("#cmbCategoria").val() == -1) {
+                Mensaje.informacion("Señor usuario ingrese la categoria");
+                return false;
+            }
+            Productos.getProductosxCategoria($("#cmbCategoria").val());
+            $("#modalFrmAgregarProducto").modal("show");
+            $("#txtUidProducto").val("-1");
+        });
+
+
+        $("#btnGuardar").click(function () {
+            console.log($("#txtUidPedidoM").val());
+            if ($("#txtUidPedidoM").val() == '-1') {
+                Pedidos.getmaxPedidoM();
+            } else {
+                Pedidos.ModificarPedidoM();
+            }
+           
+
+        });
+
+        setTimeout(function () {
+            Pedidos.getPedidosM();
+        }, 1000);
+       
+
+    });
+</script>

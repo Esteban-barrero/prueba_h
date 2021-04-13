@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="prueba_dModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="categoria">
+    <Key>
+      <PropertyRef Name="uid_categoria" />
+    </Key>
+    <Property Name="uid_categoria" Type="Int32" Nullable="false" />
+    <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="cliente">
+    <Key>
+      <PropertyRef Name="uid_cliente" />
+    </Key>
+    <Property Name="uid_cliente" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="documento" Type="String" MaxLength="24" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="telefono" Type="String" MaxLength="24" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="estado">
+    <Key>
+      <PropertyRef Name="uid_estado" />
+    </Key>
+    <Property Name="uid_estado" Type="Int32" Nullable="false" />
+    <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="pedido_detalle">
+    <Key>
+      <PropertyRef Name="uid_pedido_d" />
+    </Key>
+    <Property Name="uid_pedido_d" Type="Int32" Nullable="false" />
+    <Property Name="uid_pedido_m" Type="Int32" Nullable="false" />
+    <Property Name="uid_producto" Type="Int32" Nullable="false" />
+    <Property Name="cantidad" Type="Int32" Nullable="false" />
+    <Property Name="valor" Type="Int32" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="pedido_maestro">
+    <Key>
+      <PropertyRef Name="uid_pedido_m" />
+    </Key>
+    <Property Name="uid_pedido_m" Type="Int32" Nullable="false" />
+    <Property Name="uid_cliente" Type="Int32" Nullable="false" />
+    <Property Name="uid_categoria" Type="Int32" Nullable="false" />
+    <Property Name="valor_total" Type="Int32" />
+    <Property Name="uid_estado" Type="Int32" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="producto">
+    <Key>
+      <PropertyRef Name="uid_producto" />
+    </Key>
+    <Property Name="uid_producto" Type="Int32" Nullable="false" />
+    <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="uid_categoria" Type="Int32" Nullable="false" />
+    <Property Name="stock" Type="Int32" Nullable="false" />
+    <Property Name="valor" Type="Int32" Nullable="false" />
+    <Property Name="eliminado" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="prueba_dEntities2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="categoria" EntityType="Self.categoria" />
+    <EntitySet Name="cliente" EntityType="Self.cliente" />
+    <EntitySet Name="estado" EntityType="Self.estado" />
+    <EntitySet Name="pedido_detalle" EntityType="Self.pedido_detalle" />
+    <EntitySet Name="pedido_maestro" EntityType="Self.pedido_maestro" />
+    <EntitySet Name="producto" EntityType="Self.producto" />
+  </EntityContainer>
+</Schema>

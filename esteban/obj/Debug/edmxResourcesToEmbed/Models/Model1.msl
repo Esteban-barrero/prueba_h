@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="prueba_dModelStoreContainer" CdmEntityContainer="prueba_dEntities1">
+    <EntitySetMapping Name="categoria">
+      <EntityTypeMapping TypeName="prueba_dModel.categoria">
+        <MappingFragment StoreEntitySet="categoria">
+          <ScalarProperty Name="uid_categoria" ColumnName="uid_categoria" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="eliminado" ColumnName="eliminado" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
